@@ -19,6 +19,14 @@ else:
     # Create an OpenAI client.
     client = OpenAI(api_key=openai_api_key)
 
+    # Validate the key right away by making a test call.
+    # This catches a bad/fake key immediately, instead of waiting
+    # until the user has uploaded a document and asked a question.
+    try:
+        client.models.list()
+    except Exception:
+        st.error("That API key doesn't seem to work. Please check it and try again.", icon="🚫")
+        st.stop()
     # Let the user upload a file via `st.file_uploader`.
     uploaded_file = st.file_uploader(
         "Upload a document (.txt or .md)", type=("txt", "md")
